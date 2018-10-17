@@ -5,15 +5,18 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Dimension;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
@@ -78,8 +81,8 @@ public class StepView extends View {
     @AnimationType
     private int animationType;
 
-    @ColorInt
-    private int selectedCircleColor;
+    @DrawableRes
+    private int selectedDrawable;
     @Dimension
     private int selectedCircleRadius;
     @ColorInt
@@ -87,8 +90,8 @@ public class StepView extends View {
     @ColorInt
     private int selectedStepNumberColor;
 
-    @ColorInt
-    private int doneCircleColor;
+    @DrawableRes
+    private int doneDrawable;
     @Dimension
     private int doneCircleRadius;
     @ColorInt
@@ -98,6 +101,8 @@ public class StepView extends View {
     @ColorInt
     private int doneStepLineColor;
 
+    @DrawableRes
+    private int nextDrawable;
     @ColorInt
     private int nextTextColor;
     @ColorInt
@@ -151,17 +156,18 @@ public class StepView extends View {
 
     private void applyStyles(Context context, AttributeSet attrs, int defStyleAttr) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.StepView, defStyleAttr, R.style.StepView);
-        selectedCircleColor = ta.getColor(R.styleable.StepView_sv_selectedCircleColor, 0);
+        selectedDrawable = ta.getResourceId(R.styleable.StepView_sv_selectedDrawable, -1);
         selectedCircleRadius = ta.getDimensionPixelSize(R.styleable.StepView_sv_selectedCircleRadius, 0);
         selectedTextColor = ta.getColor(R.styleable.StepView_sv_selectedTextColor, 0);
         selectedStepNumberColor = ta.getColor(R.styleable.StepView_sv_selectedStepNumberColor, 0);
 
-        doneCircleColor = ta.getColor(R.styleable.StepView_sv_doneCircleColor, 0);
+        doneDrawable = ta.getResourceId(R.styleable.StepView_sv_doneDrawable, -1);
         doneCircleRadius = ta.getDimensionPixelSize(R.styleable.StepView_sv_doneCircleRadius, 0);
         doneTextColor = ta.getColor(R.styleable.StepView_sv_doneTextColor, 0);
         doneStepMarkColor = ta.getColor(R.styleable.StepView_sv_doneStepMarkColor, 0);
         doneStepLineColor = ta.getColor(R.styleable.StepView_sv_doneStepLineColor, 0);
 
+        nextDrawable = ta.getResourceId(R.styleable.StepView_sv_nextDrawable, -1);
         nextTextColor = ta.getColor(R.styleable.StepView_sv_nextTextColor, 0);
         nextStepLineColor = ta.getColor(R.styleable.StepView_sv_nextStepLineColor, 0);
 
@@ -641,7 +647,6 @@ public class StepView extends View {
         final String number = String.valueOf(step + 1);
 
         if (isSelected && !isDone) {
-            paint.setColor(selectedCircleColor);
             int radius;
             if (state == ANIMATE_STEP_TRANSITION && (animationType == ANIMATION_CIRCLE || animationType == ANIMATION_ALL)
                     && nextAnimatedStep < currentStep) {
@@ -649,7 +654,7 @@ public class StepView extends View {
             } else {
                 radius = selectedCircleRadius;
             }
-            canvas.drawCircle(circleCenterX, circleCenterY, radius, paint);
+            drawStepDrawable(canvas, selectedDrawable, radius, circleCenterX, circleCenterY);
 
             paint.setColor(selectedStepNumberColor);
             paint.setTextSize(stepNumberTextSize);
@@ -659,8 +664,7 @@ public class StepView extends View {
             textPaint.setColor(selectedTextColor);
             drawText(canvas, text, textY, step);
         } else if (isDone) {
-            paint.setColor(doneCircleColor);
-            canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius, paint);
+            drawStepDrawable(canvas, doneDrawable, doneCircleRadius, circleCenterX, circleCenterY);
 
             drawCheckMark(canvas, circleCenterX, circleCenterY);
 
@@ -675,11 +679,12 @@ public class StepView extends View {
             textPaint.setColor(doneTextColor);
             drawText(canvas, text, textY, step);
         } else {
+            drawStepDrawable(canvas, nextDrawable, selectedCircleRadius, circleCenterX, circleCenterY);
+
             if (state == ANIMATE_STEP_TRANSITION && step == nextAnimatedStep && nextAnimatedStep > currentStep) {
                 if (animationType == ANIMATION_CIRCLE || animationType == ANIMATION_ALL) {
                     int animatedRadius = (int) (selectedCircleRadius * animatedFraction);
-                    paint.setColor(selectedCircleColor);
-                    canvas.drawCircle(circleCenterX, circleCenterY, animatedRadius, paint);
+                    drawStepDrawable(canvas, selectedDrawable, animatedRadius, circleCenterX, circleCenterY);
                 }
                 if (animationType != ANIMATION_NONE) {
                     if (animationType == ANIMATION_CIRCLE || animationType == ANIMATION_ALL) {
@@ -714,6 +719,24 @@ public class StepView extends View {
                 textPaint.setColor(nextTextColor);
                 drawText(canvas, text, textY, step);
             }
+        }
+    }
+
+    private void drawStepDrawable(Canvas canvas, @DrawableRes int drawableId, int radius, int centerX, int centerY) {
+        if (drawableId != -1 && radius > 0) {
+            RectF rectF = new RectF(centerX - radius, centerY - radius, centerX + radius, centerY + radius);
+
+            int width = radius * 2;
+            int height = radius * 2;
+            Drawable drawable = getResources().getDrawable(drawableId);
+            drawable.setBounds(0, 0, width, height);
+            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas();
+            c.setBitmap(bitmap);
+            drawable.draw(c);
+
+            Paint iconPaint = new Paint();
+            canvas.drawBitmap(bitmap, null, rectF, iconPaint);
         }
     }
 
@@ -773,8 +796,8 @@ public class StepView extends View {
         @AnimationType
         private int animationType = StepView.this.animationType;
 
-        @ColorInt
-        private int selectedCircleColor = StepView.this.selectedCircleColor;
+        @DrawableRes
+        private int selectedDrawable = StepView.this.selectedDrawable;
         @Dimension
         private int selectedCircleRadius = StepView.this.selectedCircleRadius;
         @ColorInt
@@ -782,8 +805,8 @@ public class StepView extends View {
         @ColorInt
         private int selectedStepNumberColor = StepView.this.selectedStepNumberColor;
 
-        @ColorInt
-        private int doneCircleColor = StepView.this.doneCircleColor;
+        @DrawableRes
+        private int doneDrawable = StepView.this.doneDrawable;
         @Dimension
         private int doneCircleRadius = StepView.this.doneCircleRadius;
         @ColorInt
@@ -793,6 +816,8 @@ public class StepView extends View {
         @ColorInt
         private int doneStepLineColor = StepView.this.doneStepLineColor;
 
+        @DrawableRes
+        private int nextDrawable = StepView.this.nextDrawable;
         @ColorInt
         private int nextTextColor = StepView.this.nextTextColor;
         @ColorInt
@@ -816,8 +841,8 @@ public class StepView extends View {
             return this;
         }
 
-        public State selectedCircleColor(@ColorInt int selectedCircleColor) {
-            this.selectedCircleColor = selectedCircleColor;
+        public State selectedDrawable(@DrawableRes int selectedDrawable) {
+            this.selectedDrawable = selectedDrawable;
             return this;
         }
 
@@ -836,8 +861,8 @@ public class StepView extends View {
             return this;
         }
 
-        public State doneCircleColor(@ColorInt int doneCircleColor) {
-            this.doneCircleColor = doneCircleColor;
+        public State doneDrawable(@DrawableRes int doneDrawable) {
+            this.doneDrawable = doneDrawable;
             return this;
         }
 
@@ -858,6 +883,11 @@ public class StepView extends View {
 
         public State doneStepLineColor(@ColorInt int doneStepLineColor) {
             this.doneStepLineColor = doneStepLineColor;
+            return this;
+        }
+
+        public State nextDrawable(@DrawableRes int nextDrawable) {
+            this.nextDrawable = nextDrawable;
             return this;
         }
 
@@ -919,17 +949,18 @@ public class StepView extends View {
         public void commit() {
             StepView.this.animationType = animationType;
 
-            StepView.this.selectedCircleColor = selectedCircleColor;
+            StepView.this.selectedDrawable = selectedDrawable;
             StepView.this.selectedCircleRadius = selectedCircleRadius;
             StepView.this.selectedTextColor = selectedTextColor;
             StepView.this.selectedStepNumberColor = selectedStepNumberColor;
 
-            StepView.this.doneCircleColor = doneCircleColor;
+            StepView.this.doneDrawable = doneDrawable;
             StepView.this.doneCircleRadius = doneCircleRadius;
             StepView.this.doneTextColor = doneTextColor;
             StepView.this.doneStepMarkColor = doneStepMarkColor;
             StepView.this.doneStepLineColor = doneStepLineColor;
 
+            StepView.this.nextDrawable = nextDrawable;
             StepView.this.nextTextColor = nextTextColor;
             StepView.this.nextStepLineColor = nextStepLineColor;
 
