@@ -5,14 +5,17 @@
         <attr name="sv_selectedCircleRadius" format="dimension" />
         <attr name="sv_selectedTextColor" format="color" />
         <attr name="sv_selectedStepNumberColor" format="color" />
-        <attr name="sv_stepNumberTextSize" format="dimension" />
-        <attr name="sv_doneStepMarkColor" format="color" />
+
         <attr name="sv_doneCircleColor" format="color" />
         <attr name="sv_doneCircleRadius" format="dimension" />
         <attr name="sv_doneTextColor" format="color" />
+        <attr name="sv_doneStepMarkColor" format="color" />
+        <attr name="sv_doneStepLineColor" format="color" />
+
         <attr name="sv_nextTextColor" format="color" />
         <attr name="sv_nextStepLineColor" format="color" />
-        <attr name="sv_doneStepLineColor" format="color" />
+
+        <attr name="sv_stepNumberTextSize" format="dimension" />
         <attr name="sv_stepPadding" format="dimension" />
         <attr name="sv_textPadding" format="dimension" />
         <attr name="sv_stepLineWidth" format="dimension" />

@@ -77,6 +77,7 @@ public class StepView extends View {
 
     @AnimationType
     private int animationType;
+
     @ColorInt
     private int selectedCircleColor;
     @Dimension
@@ -84,30 +85,34 @@ public class StepView extends View {
     @ColorInt
     private int selectedTextColor;
     @ColorInt
+    private int selectedStepNumberColor;
+
+    @ColorInt
     private int doneCircleColor;
     @Dimension
     private int doneCircleRadius;
     @ColorInt
     private int doneTextColor;
     @ColorInt
-    private int nextTextColor;
-    @Dimension
-    private int stepPadding;
-    @ColorInt
-    private int nextStepLineColor;
+    private int doneStepMarkColor;
     @ColorInt
     private int doneStepLineColor;
+
+    @ColorInt
+    private int nextTextColor;
+    @ColorInt
+    private int nextStepLineColor;
+
+    @Dimension
+    private int stepPadding;
     @Dimension
     private int stepLineWidth;
     @Dimension(unit = Dimension.SP)
     private float textSize;
     @Dimension
     private int textPadding;
-    private int selectedStepNumberColor;
     @Dimension(unit = Dimension.SP)
     private float stepNumberTextSize;
-    @ColorInt
-    private int doneStepMarkColor;
     private int animationDuration;
 
     private Paint paint;
@@ -150,14 +155,17 @@ public class StepView extends View {
         selectedCircleRadius = ta.getDimensionPixelSize(R.styleable.StepView_sv_selectedCircleRadius, 0);
         selectedTextColor = ta.getColor(R.styleable.StepView_sv_selectedTextColor, 0);
         selectedStepNumberColor = ta.getColor(R.styleable.StepView_sv_selectedStepNumberColor, 0);
-        doneStepMarkColor = ta.getColor(R.styleable.StepView_sv_doneStepMarkColor, 0);
+
         doneCircleColor = ta.getColor(R.styleable.StepView_sv_doneCircleColor, 0);
         doneCircleRadius = ta.getDimensionPixelSize(R.styleable.StepView_sv_doneCircleRadius, 0);
         doneTextColor = ta.getColor(R.styleable.StepView_sv_doneTextColor, 0);
-        nextTextColor = ta.getColor(R.styleable.StepView_sv_nextTextColor, 0);
-        stepPadding = ta.getDimensionPixelSize(R.styleable.StepView_sv_stepPadding, 0);
-        nextStepLineColor = ta.getColor(R.styleable.StepView_sv_nextStepLineColor, 0);
+        doneStepMarkColor = ta.getColor(R.styleable.StepView_sv_doneStepMarkColor, 0);
         doneStepLineColor = ta.getColor(R.styleable.StepView_sv_doneStepLineColor, 0);
+
+        nextTextColor = ta.getColor(R.styleable.StepView_sv_nextTextColor, 0);
+        nextStepLineColor = ta.getColor(R.styleable.StepView_sv_nextStepLineColor, 0);
+
+        stepPadding = ta.getDimensionPixelSize(R.styleable.StepView_sv_stepPadding, 0);
         stepLineWidth = ta.getDimensionPixelSize(R.styleable.StepView_sv_stepLineWidth, 0);
         textPadding = ta.getDimensionPixelSize(R.styleable.StepView_sv_textPadding, 0);
         stepNumberTextSize = ta.getDimension(R.styleable.StepView_sv_stepNumberTextSize, 0);
@@ -764,6 +772,7 @@ public class StepView extends View {
         private int stepsNumber;
         @AnimationType
         private int animationType = StepView.this.animationType;
+
         @ColorInt
         private int selectedCircleColor = StepView.this.selectedCircleColor;
         @Dimension
@@ -771,31 +780,34 @@ public class StepView extends View {
         @ColorInt
         private int selectedTextColor = StepView.this.selectedTextColor;
         @ColorInt
+        private int selectedStepNumberColor = StepView.this.selectedStepNumberColor;
+
+        @ColorInt
         private int doneCircleColor = StepView.this.doneCircleColor;
         @Dimension
         private int doneCircleRadius = StepView.this.doneCircleRadius;
         @ColorInt
         private int doneTextColor = StepView.this.doneTextColor;
         @ColorInt
-        private int nextTextColor = StepView.this.nextTextColor;
-        @Dimension
-        private int stepPadding = StepView.this.stepPadding;
-        @ColorInt
-        private int nextStepLineColor = StepView.this.nextStepLineColor;
+        private int doneStepMarkColor = StepView.this.doneStepMarkColor;
         @ColorInt
         private int doneStepLineColor = StepView.this.doneStepLineColor;
+
+        @ColorInt
+        private int nextTextColor = StepView.this.nextTextColor;
+        @ColorInt
+        private int nextStepLineColor = StepView.this.nextStepLineColor;
+
+        @Dimension
+        private int stepPadding = StepView.this.stepPadding;
         @Dimension
         private int stepLineWidth = StepView.this.stepLineWidth;
         @Dimension(unit = Dimension.SP)
         private float textSize = StepView.this.textSize;
         @Dimension
         private int textPadding = StepView.this.textPadding;
-        @ColorInt
-        private int selectedStepNumberColor = StepView.this.selectedStepNumberColor;
         @Dimension(unit = Dimension.SP)
         private float stepNumberTextSize = StepView.this.stepNumberTextSize;
-        @ColorInt
-        private int doneStepMarkColor = StepView.this.doneStepMarkColor;
         private int animationDuration = StepView.this.animationDuration;
         private Typeface typeface = paint.getTypeface();
 
@@ -819,6 +831,11 @@ public class StepView extends View {
             return this;
         }
 
+        public State selectedStepNumberColor(@ColorInt int selectedStepNumberColor) {
+            this.selectedStepNumberColor = selectedStepNumberColor;
+            return this;
+        }
+
         public State doneCircleColor(@ColorInt int doneCircleColor) {
             this.doneCircleColor = doneCircleColor;
             return this;
@@ -834,13 +851,18 @@ public class StepView extends View {
             return this;
         }
 
-        public State nextTextColor(@ColorInt int nextTextColor) {
-            this.nextTextColor = nextTextColor;
+        public State doneStepMarkColor(@ColorInt int doneStepMarkColor) {
+            this.doneStepMarkColor = doneStepMarkColor;
             return this;
         }
 
-        public State stepPadding(@Dimension int stepPadding) {
-            this.stepPadding = stepPadding;
+        public State doneStepLineColor(@ColorInt int doneStepLineColor) {
+            this.doneStepLineColor = doneStepLineColor;
+            return this;
+        }
+
+        public State nextTextColor(@ColorInt int nextTextColor) {
+            this.nextTextColor = nextTextColor;
             return this;
         }
 
@@ -849,8 +871,8 @@ public class StepView extends View {
             return this;
         }
 
-        public State doneStepLineColor(@ColorInt int doneStepLineColor) {
-            this.doneStepLineColor = doneStepLineColor;
+        public State stepPadding(@Dimension int stepPadding) {
+            this.stepPadding = stepPadding;
             return this;
         }
 
@@ -869,18 +891,8 @@ public class StepView extends View {
             return this;
         }
 
-        public State selectedStepNumberColor(@ColorInt int selectedStepNumberColor) {
-            this.selectedStepNumberColor = selectedStepNumberColor;
-            return this;
-        }
-
         public State stepNumberTextSize(@Dimension(unit = Dimension.SP) int stepNumberTextSize) {
             this.stepNumberTextSize = stepNumberTextSize;
-            return this;
-        }
-
-        public State doneStepMarkColor(@ColorInt int doneStepMarkColor) {
-            this.doneStepMarkColor = doneStepMarkColor;
             return this;
         }
 
@@ -906,25 +918,30 @@ public class StepView extends View {
 
         public void commit() {
             StepView.this.animationType = animationType;
-            StepView.this.selectedTextColor = selectedTextColor;
-            StepView.this.selectedCircleRadius = selectedCircleRadius;
+
             StepView.this.selectedCircleColor = selectedCircleColor;
+            StepView.this.selectedCircleRadius = selectedCircleRadius;
             StepView.this.selectedTextColor = selectedTextColor;
+            StepView.this.selectedStepNumberColor = selectedStepNumberColor;
+
             StepView.this.doneCircleColor = doneCircleColor;
             StepView.this.doneCircleRadius = doneCircleRadius;
             StepView.this.doneTextColor = doneTextColor;
-            StepView.this.nextTextColor = nextTextColor;
-            StepView.this.stepPadding = stepPadding;
-            StepView.this.nextStepLineColor = nextStepLineColor;
+            StepView.this.doneStepMarkColor = doneStepMarkColor;
             StepView.this.doneStepLineColor = doneStepLineColor;
+
+            StepView.this.nextTextColor = nextTextColor;
+            StepView.this.nextStepLineColor = nextStepLineColor;
+
+            StepView.this.stepPadding = stepPadding;
             StepView.this.stepLineWidth = stepLineWidth;
             StepView.this.textSize = textSize;
             StepView.this.textPadding = textPadding;
-            StepView.this.selectedStepNumberColor = selectedStepNumberColor;
             StepView.this.stepNumberTextSize = stepNumberTextSize;
-            StepView.this.doneStepMarkColor = doneStepMarkColor;
             StepView.this.animationDuration = animationDuration;
+
             setTypeface(typeface);
+
             if (steps != null && !StepView.this.steps.equals(steps)) {
                 StepView.this.setSteps(steps);
             } else if (stepsNumber != 0 && stepsNumber != StepView.this.stepsNumber) {
