@@ -7,6 +7,7 @@
     <color name="stepview_text_selected">@android:color/white</color>
     <color name="stepview_circle_done">@android:color/white</color>
     <color name="stepview_circle_selected">@android:color/white</color>
-    <color name="stepview_selected_number">#25448a</color>
-    <color name="stepview_mark">@color/stepview_selected_number</color>
+    <color name="stepview_circle_next">@android:color/transparent</color>
+    <color name="stepview_selected_number">@android:color/white</color>
+    <color name="stepview_mark">#000</color>
 </resources>
