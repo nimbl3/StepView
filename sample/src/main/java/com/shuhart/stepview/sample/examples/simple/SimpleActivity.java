@@ -62,6 +62,12 @@ public class SimpleActivity extends AppCompatActivity {
                 Toast.makeText(SimpleActivity.this, "Step " + step, Toast.LENGTH_SHORT).show();
             }
         });
+        stepView2.setOnStepChangedListener(new StepView.OnStepChangedListener() {
+            @Override
+            public void onStepChanged(int currentStep) {
+                Toast.makeText(SimpleActivity.this, String.valueOf(currentStep), Toast.LENGTH_SHORT).show();
+            }
+        });
         findViewById(R.id.next_2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

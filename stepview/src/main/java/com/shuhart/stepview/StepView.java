@@ -46,6 +46,11 @@ public class StepView extends View {
         void onStepClick(int step);
     }
 
+    public interface OnStepChangedListener {
+
+        void onStepChanged(int currentStep);
+    }
+
     public static final int ANIMATION_LINE = 0;
     public static final int ANIMATION_CIRCLE = 1;
     public static final int ANIMATION_ALL = 2;
@@ -65,6 +70,7 @@ public class StepView extends View {
     }
 
     private OnStepClickListener onStepClickListener;
+    private OnStepChangedListener onStepChangedListener;
     private static final int ANIMATE_STEP_TRANSITION = 0;
     private static final int IDLE = 1;
 
@@ -257,6 +263,10 @@ public class StepView extends View {
         onStepClickListener = listener;
     }
 
+    public void setOnStepChangedListener(OnStepChangedListener listener) {
+        onStepChangedListener = listener;
+    }
+
     public void setSteps(List<String> steps) {
         stepsNumber = 0;
         displayMode = DISPLAY_MODE_WITH_TEXT;
@@ -283,8 +293,7 @@ public class StepView extends View {
             if (animate && animationType != ANIMATION_NONE && startLinesX != null) {
                 if (Math.abs(step - currentStep) > 1) {
                     endAnimation();
-                    currentStep = step;
-                    invalidate();
+                    updateStep(step);
                 } else {
                     nextAnimatedStep = step;
                     state = ANIMATE_STEP_TRANSITION;
@@ -292,9 +301,16 @@ public class StepView extends View {
                     invalidate();
                 }
             } else {
-                currentStep = step;
-                invalidate();
+                updateStep(step);
             }
+        }
+    }
+
+    private void updateStep(int step) {
+        currentStep = step;
+        invalidate();
+        if (onStepChangedListener != null) {
+            onStepChangedListener.onStepChanged(currentStep);
         }
     }
 
@@ -326,8 +342,7 @@ public class StepView extends View {
             @Override
             public void onAnimationEnd(Animator animator) {
                 state = IDLE;
-                currentStep = step;
-                invalidate();
+                updateStep(step);
             }
         });
         animator.setDuration(animationDuration);
