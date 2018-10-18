@@ -1,13 +1,15 @@
 StepView
 ======================
 
+[![](https://jitpack.io/v/nimbl3/StepView.svg)](https://jitpack.io/#nimbl3/StepView)
+
 A simple animated step view for Android. Backward and forward animations is supported.
 
 Usage
 -----
 
-1. Add jcenter() to repositories block in your gradle file.
-2. Add `implementation 'com.shuhart.stepview:stepview:1.4.0'` to your dependencies.
+1. Add `maven { url 'https://jitpack.io' }` to repositories block in your gradle file.
+2. Add `implementation 'com.github.nimbl3:StepView:LATEST_VERSION'` to your dependencies.
 3. Add `StepView` into your layouts or view hierarchy.
 
 Supported animations:
@@ -47,36 +49,37 @@ Or Specify numbers of steps so that only circles with step number are shown:
 Styling:
 
 ```xml
-<com.shuhart.stepview.StepView
-	android:id="@+id/step_view"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:padding="16dp"
-	app:sv_selectedCircleColor="@color/colorAccent"
-	app:sv_selectedTextColor="@color/colorAccent"
-	app:sv_stepLineWidth="1dp"
-	app:sv_stepPadding="4dp"
-    app:sv_nextTextColor="@color/colorAccent"
-	app:sv_nextStepLineColor="@color/colorAccent"
-	app:sv_doneCircleColor="@color/colorAccent"
-	app:sv_doneStepLineColor="@color/colorAccent"
-	app:sv_doneCircleRadius="12dp"
-	app:sv_selectedCircleRadius="12dp"
-	app:sv_selectedStepNumberColor="@color/colorPrimary"
-	app:sv_stepViewStyle="@style/StepView"
-	app:sv_doneStepMarkColor="@color/colorPrimary"
-	app:sv_stepNumberTextSize="12sp"
-	app:sv_animationType="Line"
-  app:sv_typeface="@font/roboto_italic"/>
+        <com.shuhart.stepview.StepView
+            android:id="@+id/step_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:sv_animationType="All"
+            app:sv_doneCircleRadius="@dimen/circle_radius"
+            app:sv_doneDrawable="@drawable/done"
+            app:sv_doneStepLineColor="@color/red"
+            app:sv_doneStepMarkColor="@color/white"
+            app:sv_doneTextColor="@color/dark"
+            app:sv_nextDrawable="@drawable/next"
+            app:sv_nextStepLineColor="@color/gray"
+            app:sv_nextTextColor="@color/dark"
+            app:sv_selectedCircleRadius="@dimen/circle_radius"
+            app:sv_selectedDrawable="@drawable/selected"
+            app:sv_selectedStepNumberColor="@color/dark"
+            app:sv_selectedTextColor="@color/dark"
+            app:sv_stepLineWidth="1dp"
+            app:sv_stepNumberTextSize="@dimen/steps_text"
+            app:sv_stepPadding="12dp"
+            app:sv_textSize="@dimen/steps_text"
+            app:sv_textPadding="3dp"
+            app:sv_typeface="@font/iran_sans_mobile" />
 ```
 
 or instantiate and setup it in runtime with handy state builder:
 
 ```java
     stepView.getState()
-            .selectedTextColor(ContextCompat.getColor(this, R.color.colorAccent))
             .animationType(StepView.ANIMATION_CIRCLE)
-            .selectedCircleColor(ContextCompat.getColor(this, R.color.colorAccent))
+            .selectedDrawable(R.drawable.selected)
             .selectedCircleRadius(getResources().getDimensionPixelSize(R.dimen.dp14))
             .selectedStepNumberColor(ContextCompat.getColor(this, R.color.colorPrimary))
             // You should specify only stepsNumber or steps array of strings.
@@ -117,6 +120,16 @@ You can set a step click listener:
     });
 ```
 
+You can set a step item changed listener:
+```java
+    stepView.setOnStepChangedListener(new StepView.OnStepChangedListener() {
+            @Override
+            public void onStepChanged(int currentStep) {
+                Toast.makeText(SimpleActivity.this, String.valueOf(currentStep), Toast.LENGTH_SHORT).show();
+            }
+        });
+```
+
 See the sample for additional details.
 
 If you want a custom typeface you should add font files to the resource folder "font" and reference any in xml layout.
@@ -125,7 +138,7 @@ Alternatively you can specify typeface using the state builder in your code. Loo
 License
 =======
 
-    Copyright 2017 Bogdan Kornev.
+    Copyright 2018 Nimbl3 Thailand.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
